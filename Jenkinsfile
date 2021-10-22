@@ -63,6 +63,7 @@ pipeline {
                     resolverId: "MAVEN_RESOLVER"
                 )
          }
+    }
 
 stage('Docker Build') {
       steps {
@@ -91,7 +92,8 @@ stage('Docker Build') {
 					   sh 'helm push-artifactory webapp-1.0.tgz demo-helm'
 					  }
         }
-    }
-  }
+        }
+      }
+
   } 
 }
