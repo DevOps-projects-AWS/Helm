@@ -87,10 +87,10 @@ stage('Docker Build') {
     steps {
         dir('charts') {
         withCredentials([usernamePassword(credentialsId: 'jfrog', usernameVariable: 'username', passwordVariable: 'password')]) {
-             sh 'helm package webapp'
-             sh 'helm repo add demo-helm https://dptdemo.jfrog.io/artifactory/demo-helm --username $username --password $password'
-					   sh 'helm push-artifactory webapp-1.0.tgz demo-helm'
-					  }
+             sh 'sudo /usr/local/bin/helm package webapp'
+             sh 'sudo /usr/local/bin/helm repo add demo-helm https://dptdemo.jfrog.io/artifactory/demo-helm --username $username --password $password'
+			 sh 'sudo /usr/local/bin/helm push-artifactory webapp-1.0.tgz demo-helm'
+		  }
         }
         }
       }
