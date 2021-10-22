@@ -5,5 +5,5 @@ FROM tomcat:latest
 MAINTAINER "PR Reddy - DevOps-Realtime" 
 
 # copy war file on to container 
-COPY target/login-release.war /usr/local/tomcat/webapps/login.war
+COPY app/target/login-release.war /usr/local/tomcat/webapps/login.war
 EXPOSE 8080
