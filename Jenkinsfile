@@ -3,38 +3,31 @@ pipeline {
   tools {
   maven 'maven'
   }
-   environment {
-        HELM_LOGINS = credentials('helmid')
-    }
     stages {
 
-      stage ('Checkout SCM'){
+  stage ('Checkout SCM'){
         steps {
           checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://dptrealtime@bitbucket.org/dptrealtime/webapp-cicd-integrations.git']]])
-        }
       }
+   }
 	  
-	  stage ('Build')  {
-	      steps {
-          
-            dir('app'){
+	stage ('Build')  {
+	    steps {
+        dir('app'){
             sh "mvn package"
           }
-        }
-         
-      }
+        }    
+   }
    
-     stage ('SonarQube Analysis') {
-        steps {
-              withSonarQubeEnv('sonar') {
-                
+  stage ('SonarQube Analysis') {
+    steps {
+      withSonarQubeEnv('sonar') {           
 				dir('app'){
-                 sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dptdemo'
-                }
-				
-              }
-            }
-      }
+          sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dptdemo'
+        }
+    }
+    }
+ }
 
     stage ('Artifactory configuration') {
             steps {
@@ -70,7 +63,6 @@ pipeline {
                     resolverId: "MAVEN_RESOLVER"
                 )
          }
-    }
 
 stage('Docker Build') {
       steps {
@@ -81,6 +73,7 @@ stage('Docker Build') {
           }
       }
     }
+}
    stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
@@ -97,9 +90,8 @@ stage('Docker Build') {
              sh 'helm repo add demo-helm https://dptdemo.jfrog.io/artifactory/demo-helm --username $username --password $password'
 					   sh 'helm push-artifactory webapp-1.0.tgz demo-helm'
 					  }
-          }
+        }
     }
-
-   
-   } 
+  }
+  } 
 }
