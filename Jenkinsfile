@@ -23,7 +23,7 @@ pipeline {
     steps {
       withSonarQubeEnv('sonar') {           
 				dir('app'){
-          sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dptdemo'
+          sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=stskey'
         }
     }
     }
@@ -40,8 +40,8 @@ pipeline {
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "jfrog",
-                    releaseRepo: "demo-libs-release-local",
-                    snapshotRepo: "demo-libs-snapshot-local"
+                    releaseRepo: "sts-libs-release-local",
+                    snapshotRepo: "sts-libs-snapshot-local"
                 )
 
                 rtMavenResolver (
@@ -88,7 +88,7 @@ stage('Docker Build') {
         dir('charts') {
         withCredentials([usernamePassword(credentialsId: 'jfrog', usernameVariable: 'username', passwordVariable: 'password')]) {
              sh 'sudo /usr/local/bin/helm package webapp'
-             sh 'sudo /usr/local/bin/helm push-artifactory webapp-1.0.tgz https://dptdemo.jfrog.io/artifactory/hello-helm-local --username $username --password $password'
+             sh 'sudo /usr/local/bin/helm push-artifactory webapp-1.0.tgz https://dptdemo.jfrog.io/artifactory/sts-helm-local --username $username --password $password'
 		  }
         }
         }
